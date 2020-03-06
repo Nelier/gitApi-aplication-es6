@@ -14,7 +14,7 @@
 > - Node.js;
 > - Babel;
 > - Axios;
-> - WebSocket;
+> - WebPack Server;
 > - Git;
 > - API Rest;
 
