@@ -2,7 +2,7 @@ import api from './api';
 
 class App {
     constructor() {
-        this.repository = [];
+        this.repository = JSON.parse(localStorage.getItem('repo_list')) || [];
 
         this.formEl = document.getElementById('repo-form');
         this.inputEl = document.querySelector('input[name=repository]');
@@ -10,6 +10,7 @@ class App {
         this.listEl = document.getElementById('repo-list');
 
         this.registerHandlers();
+        this.render();
     }
 
     registerHandlers() {
@@ -42,6 +43,7 @@ class App {
             this.inputUserEl.innerHTML = '';
 
             this.render();
+            this.addToStorage();
         } catch (err) {
             alert(err);
         }
@@ -62,7 +64,7 @@ class App {
     render() {
         this.listEl.innerHTML = '';
 
-        this.repository.forEach(repo => {
+        this.repository.forEach((repo, index) => {
             let imgEl = document.createElement('img');
             imgEl.setAttribute('src', repo.avatar_url);
 
@@ -77,15 +79,31 @@ class App {
             linkEl.setAttribute('href', repo.html_url);
             linkEl.appendChild(document.createTextNode('Acessar'));
 
+            let deleteEl = document.createElement('button');
+            deleteEl.addEventListener("click", () => {
+                return this.deleteRepo(index);
+            });
+            deleteEl.innerHTML = 'Deletar';
+
             let listItemEl = document.createElement('li');
             listItemEl.append(imgEl);
             listItemEl.append(titleEl);
             listItemEl.append(descriptionEl);
             listItemEl.append(linkEl);
+            listItemEl.append(deleteEl);
 
             this.listEl.appendChild(listItemEl);
         })
     }
+    addToStorage() {
+        localStorage.setItem('repo_list', JSON.stringify(this.repository));
+    }
+    deleteRepo(pos) {
+        this.repository.splice(pos, 1);
+        this.render();
+        this.addToStorage();
+    }
+
 }
 
 new App();
